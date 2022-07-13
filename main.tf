@@ -37,13 +37,32 @@ module "sg" {
   cidr_blocks = split(",", var.access_cidr_blocks)
 }
 
-module "participant-ec2" {
-  source               = "./modules/ec2"
-  standalone_ami_name  = var.standalone_ami_name
-  standalone_ami_owner = var.standalone_ami_owner
-  subnet_id            = module.subnet.subnet_id
-  security_group_id    = module.sg.security_group_id
-  ec2_members          = var.ec2_members
-  ec2_instance_type    = var.ec2_instance_type
-  ec2_volume_size      = var.ec2_volume_size
+module "credential" {
+  source = "./modules/credential"
+}
+
+module "ec2_webapp" {
+  source             = "./modules/ec2"
+  category           = "webapp"
+  ami_name           = var.webapp.ami_name
+  ami_owner          = var.webapp.ami_owner
+  subnet_id          = module.subnet.subnet_id
+  security_group_id  = module.sg.security_group_id
+  credential_key_id  = module.credential.credential_key_id
+  ec2_instance_type  = var.webapp.ec2_instance_type
+  ec2_instance_count = var.webapp.ec2_instance_count
+  ec2_volume_size    = var.webapp.ec2_volume_size
+}
+
+module "ec2_bench" {
+  source             = "./modules/ec2"
+  category           = "bench"
+  ami_name           = var.bench.ami_name
+  ami_owner          = var.bench.ami_owner
+  subnet_id          = module.subnet.subnet_id
+  security_group_id  = module.sg.security_group_id
+  credential_key_id  = module.credential.credential_key_id
+  ec2_instance_type  = var.bench.ec2_instance_type
+  ec2_instance_count = 1
+  ec2_volume_size    = var.bench.ec2_volume_size
 }

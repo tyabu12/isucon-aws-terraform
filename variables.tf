@@ -1,13 +1,35 @@
-variable "standalone_ami_name" {
-  type        = string
-  default     = "isuconXX-qualify"
-  description = "AMI Name of stand alone instance"
+variable "webapp" {
+  type = object({
+    ami_owner          = string
+    ami_name           = string
+    ec2_instance_type  = string
+    ec2_instance_count = number
+    ec2_volume_size    = number
+  })
+  default = {
+    ami_name           = "isuconXX-qualify"
+    ami_owner          = "839726181030" # owner of https://github.com/matsuu/aws-isucon
+    ec2_instance_type  = "t2.micro"
+    ec2_instance_count = 3
+    ec2_volume_size    = 20
+  }
+  description = "webapp instance"
 }
 
-variable "standalone_ami_owner" {
-  type        = string
-  default     = "839726181030" # owner of https://github.com/matsuu/aws-isucon
-  description = "Owner of the stand alone AMI"
+variable "bench" {
+  type = object({
+    ami_owner         = string
+    ami_name          = string
+    ec2_instance_type = string
+    ec2_volume_size   = number
+  })
+  default = {
+    ami_name          = "isuconXX-qualify"
+    ami_owner         = "839726181030" # owner of https://github.com/matsuu/aws-isucon
+    ec2_instance_type = "t2.micro"
+    ec2_volume_size   = 20
+  }
+  description = "benchmarker instance"
 }
 
 variable "access_cidr_blocks" {
@@ -20,27 +42,4 @@ variable "vpc_net_mask" {
   type        = string
   default     = "10.1.0.0"
   description = "VPC network subnet mask"
-}
-
-variable "ec2_members" {
-  type = map
-  default = { # デフォルトではベンチマーカー役も含んだ4台のEC2が同じAMIで構築される
-    "0" = "worker-01"
-    "1" = "worker-02"
-    "2" = "worker-03"
-    "3" = "benchmark-instance"
-  }
-  description = "EC2 instances for isucon practice"
-}
-
-variable "ec2_instance_type" {
-  type        = string
-  default     = "t2.micro"
-  description = "EC2 instance type"
-}
-
-variable "ec2_volume_size" {
-  type        = number
-  default     = 20
-  description = "EC2 EBS volume size"
 }
