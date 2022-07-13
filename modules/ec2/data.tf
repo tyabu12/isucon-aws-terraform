@@ -8,7 +8,10 @@ data "aws_ami" "standalone_ami" {
   }
 
   filter {
-    name   = "name"
-    values = [format("%s-*", var.ami_name)]
+    name = "name"
+    values = [
+      format("%s-*", var.ami_name),
+      format("%s_*", var.ami_name),
+    ]
   }
 }
